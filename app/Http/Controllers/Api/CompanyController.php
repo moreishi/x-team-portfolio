@@ -3,24 +3,27 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\User;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Company;
-use Illuminate\Support\Facades\Hash;
+use App\Job;
 use Illuminate\Support\Facades\Validator;
 
 class CompanyController extends Controller
 {
     public $company;
 
+    public $job;
+
     /**
      * CompanyController constructor.
      * @param Company $company
+     * @param Job $job
      */
-    public function __construct(Company $company)
+    public function __construct(Company $company, Job $job)
     {
         $this->company = $company;
+
+        $this->job = $job;
     }
 
     /**
@@ -156,5 +159,21 @@ class CompanyController extends Controller
                 'message' => "Unable to delete company."
             ]
         ], 422);
+    }
+
+    /**
+     * @param $companyId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function jobs($companyId)
+    {
+        $company = $this->job->with('company')->whereHas('company', function($q) use ($companyId) {
+            return $q->where('id',$companyId);
+        })->paginate(10);
+
+        return response()->json([
+            'status' => 'Ok',
+            'result' => compact('company')
+        ], 200);
     }
 }

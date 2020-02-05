@@ -19,6 +19,10 @@ Route::post('register','Api\PassportController@register');
 
 Route::middleware('auth:api')->group(function() {
 
+    Route::prefix('companies')->group(function() {
+        Route::get('{id}/jobs','Api\CompanyController@jobs');
+    });
+
     Route::resource('companies','Api\CompanyController');
     Route::resource('users','Api\UserController');
 });
