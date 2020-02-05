@@ -24,5 +24,6 @@ Route::middleware('auth:api')->group(function() {
     });
 
     Route::resource('companies','Api\CompanyController');
+    Route::resource('jobs','Api\JobController');
     Route::resource('users','Api\UserController');
 });

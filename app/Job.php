@@ -11,6 +11,8 @@ class Job extends Model
      */
     protected $guarded = [];
 
+    protected $hidden = ['company_id'];
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
