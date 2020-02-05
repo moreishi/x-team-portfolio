@@ -20,6 +20,7 @@ class CreateJobsTable extends Migration
             $table->string('position');
             $table->string('salary_range');
             $table->text('details');
+            $table->unsignedInteger('views');
             $table->unsignedInteger('company_id');
             $table->timestamps();
         });

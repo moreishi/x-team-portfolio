@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\Company;
+use App\Job;
 
 class JobSeeder extends Seeder
 {
@@ -11,6 +13,13 @@ class JobSeeder extends Seeder
      */
     public function run()
     {
-        //
+        $companies = Company::all();
+
+        foreach($companies as $company)
+        {
+            factory(Job::class, rand(1,3))->create([
+                'company_id' => $company->id
+            ]);
+        }
     }
 }

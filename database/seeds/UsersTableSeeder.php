@@ -15,7 +15,7 @@ class UsersTableSeeder extends Seeder
     {
         $admin = factory(User::class)->create();
         $hiring_manager = factory(User::class, 5)->create();
-        $users = factory(User::class, 100)->create();
+        $users = factory(User::class, 50)->create();
 
         /* Assign Admin role */
         $admin->roles()->attach(Role::where('slug','admin')->first());
