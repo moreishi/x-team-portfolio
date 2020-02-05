@@ -3,28 +3,42 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Company;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class CompanyController extends Controller
 {
+    public $company;
+
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * CompanyController constructor.
+     * @param Company $company
      */
-    public function index()
+    public function __construct(Company $company)
     {
-        //
+        $this->company = $company;
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function create()
+    public function index()
     {
-        //
+        if(!empty(request()->only('role')))
+        {
+
+        } else {
+            $companies = $this->company->paginate(10);
+        }
+
+        return response()->json([
+            'status' => 'Ok',
+            'result' => compact('companies')
+        ], 200);
     }
 
     /**
@@ -35,7 +49,33 @@ class CompanyController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validate = Validator::make($request->all(), [
+            'name' => 'required|unique:companies',
+            'email' => 'required',
+            'business_phone' => 'required',
+            'mobile' => 'required',
+            'contact_person' => 'required',
+            'url' => 'required'
+        ]);
+
+        if($validate->fails()) return response()->json([
+            'status' => 'Failed',
+            'result' => ['error' => $validate->errors()]
+        ], 200);
+
+        $company = $this->company->create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'business_phone' =>$request->business_phone,
+            'mobile' => $request->mobile,
+            'contact_person' => $request->contact_person,
+            'url' => $request->url
+        ]);
+
+        return response()->json([
+            'status' => 'Ok',
+            'result' => compact('company')
+        ], 200);
     }
 
     /**
@@ -46,18 +86,18 @@ class CompanyController extends Controller
      */
     public function show($id)
     {
-        //
-    }
+        $company = $this->company->find($id);
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        if(is_null($company)) return response()->json([
+            'status' => 'Failed',
+            'result' => [
+                'message' => 'Invalid company id.']
+        ], 422);
+
+        return response()->json([
+            'status' => 'Ok',
+            'result' => compact('company')
+        ], 200);
     }
 
     /**
@@ -69,7 +109,27 @@ class CompanyController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $company = $this->company->find($id);
+
+        if(is_null($company)) return response()->json([
+            'status' => 'Failed',
+            'result' => [
+                'message' => 'Invalid company id.']
+        ], 422);
+
+        $company->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'business_phone' =>$request->business_phone,
+            'mobile' => $request->mobile,
+            'contact_person' => $request->contact_person,
+            'url' => $request->url
+        ]);
+
+        return response()->json([
+            'status' => 'Ok',
+            'result' => compact('company')
+        ], 200);
     }
 
     /**
@@ -80,6 +140,21 @@ class CompanyController extends Controller
      */
     public function destroy($id)
     {
-        //
+        if($this->company->destroy($id))
+        {
+            return response()->json([
+                'status' => 'Ok',
+                'result' => [
+                    'message' => "Company with id $id has been deleted."
+                ]
+            ], 200);
+        }
+
+        return response()->json([
+            'status' => 'Failed',
+            'result' => [
+                'message' => "Unable to delete company."
+            ]
+        ], 422);
     }
 }

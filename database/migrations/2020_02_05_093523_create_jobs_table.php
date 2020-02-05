@@ -17,7 +17,10 @@ class CreateJobsTable extends Migration
             $table->bigIncrements('id');
             $table->string('title');
             $table->string('location');
+            $table->string('position');
+            $table->string('salary_range');
             $table->text('details');
+            $table->unsignedInteger('company_id');
             $table->timestamps();
         });
     }

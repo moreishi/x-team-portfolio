@@ -19,5 +19,6 @@ Route::post('register','Api\PassportController@register');
 
 Route::middleware('auth:api')->group(function() {
 
+    Route::resource('companies','Api\CompanyController');
     Route::resource('users','Api\UserController');
 });
