@@ -4,10 +4,11 @@
 
 use App\Job;
 use Faker\Generator as Faker;
+use Illuminate\Support\Str;
 
 $factory->define(Job::class, function (Faker $faker) {
     return [
-        'title' => $faker->paragraph,
+        'title' => Str::random(16),
         'location' => $faker->city .', '. $faker->country,
         'position' => $faker->paragraph,
         'salary_range' => rand(10000, 100000),

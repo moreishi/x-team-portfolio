@@ -37,7 +37,9 @@ class JobController extends Controller
         {
 
         } else {
-            $jobs = $this->job->with('company')->paginate(10);
+            $jobs = $this->job
+                ->with('tags')
+                ->with('company')->paginate(10);
         }
 
         return response()->json([
@@ -92,7 +94,7 @@ class JobController extends Controller
      */
     public function show($id)
     {
-        $job = $this->job->with('company')->find($id);
+        $job = $this->job->with('company','tags')->find($id);
 
         if(is_null($job)) return response()->json([
             'status' => 'Failed',
