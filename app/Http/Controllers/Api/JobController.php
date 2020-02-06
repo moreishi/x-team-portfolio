@@ -124,11 +124,11 @@ class JobController extends Controller
         ], 422);
 
         $job->update([
-            'title' => $request->name,
-            'location' => $request->email,
-            'position' =>$request->business_phone,
-            'salary_range' => $request->mobile,
-            'details' => $request->contact_person
+            'title' => $request->title,
+            'location' => $request->location,
+            'position' => $request->position,
+            'salary_range' => $request->salary_range,
+            'details' => $request->details
         ]);
 
         return response()->json([
